@@ -4,22 +4,25 @@ import {
   FingerPrintIcon,
   HomeIcon,
   DocumentDuplicateIcon,
-  InformationCircleIcon
-} from '@heroicons/react/24/outline';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
+  InformationCircleIcon,
+  Cog8ToothIcon,
+  SpeakerWaveIcon
+} from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Home', href: '/', icon: HomeIcon },
+  { name: "Home", href: "/", icon: HomeIcon },
   {
-    name: 'Authenticate',
-    href: '/authenticate',
+    name: "Authenticate",
+    href: "/authenticate",
     icon: FingerPrintIcon,
   },
-  { name: 'Settings', href: '/settings', icon: DocumentDuplicateIcon },
+  { name: "Playground", href: "/playground", icon: SpeakerWaveIcon },
+  { name: "Settings", href: "/settings", icon: Cog8ToothIcon },
   { name: "Instructions", href: "/instructions", icon: InformationCircleIcon},
 ];
 
