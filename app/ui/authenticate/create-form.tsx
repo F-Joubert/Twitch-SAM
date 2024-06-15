@@ -82,7 +82,7 @@ export default function Form() {
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-200"
           target="_blank"
         >
-          Register New Application
+            Register New Application
         </a>
         <Button type="submit">Authenticate</Button>
       </div>
