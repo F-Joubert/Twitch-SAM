@@ -51,8 +51,8 @@ export default function Form() {
                 />
             </div>
             <div className="grid gap-10 mb-6 mt-6 w-full grid-cols-2">
-                <Button className="w-full justify-center" type="submit">Speak</Button>
-                <Button className="w-full justify-center" type="submit">Download</Button>
+                <Button className="w-full justify-center" id="speak" name="action" value="speak" type="submit">Speak</Button>
+                <Button className="w-full justify-center" id="download" name="action" value="download" type="submit">Download</Button>
             </div>
         </form>
     )
@@ -65,6 +65,7 @@ function speakSAM(formData: FormData) {
         inputPitch: Number(formData.get("pitch")),
         inputMouth: Number(formData.get("mouth")),
         inputThroat: Number(formData.get("throat")),
+        inputType: formData.get("action"),
     };
 
     const sam = new SamJs({
@@ -73,8 +74,9 @@ function speakSAM(formData: FormData) {
         mouth: rawFormData.inputMouth,
         throat: rawFormData.inputThroat});
     
-    if (rawFormData.inputText) {
+    if (rawFormData.inputText && rawFormData.inputType === "speak") {
         sam.speak(`${rawFormData.inputText}`);
+    } else if (rawFormData.inputText && rawFormData.inputType === "download") {
+        sam.download(`${rawFormData.inputText}`);
     }
-    sam.download(`${rawFormData.inputText}`);
 }
