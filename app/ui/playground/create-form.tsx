@@ -47,6 +47,7 @@ export default function Form() {
                     type="text"
                     placeholder="Enter SAM's dialogue."
                     defaultValue={"Hello, my name is SAM"}
+                    required={true}
                     className="place-self-center peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black mb-4"
                 />
             </div>
