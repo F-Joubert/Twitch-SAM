@@ -1,33 +1,61 @@
 "use client";
 
 import { Button } from "@/app/ui/button";
+import { useState } from "react";
 import SamJs from "sam-js";
+import { inter } from "../fonts";
 
 export default function Form() {
+    const [speed, setSpeed] = useState<number>(72);
+    const [pitch, setPitch] = useState<number>(64);
+    const [mouth, setMouth] = useState<number>(128);
+    const [throat, setThroat] = useState<number>(128);
     return (
         <form action={speakSAM}>
             <div className="grid gap-10 mb-6 mt-6 sm:grid-cols-1 lg:grid-cols-2">
                 <div className="relative mb-4">
-                    <label htmlFor="pitch" className="mb-2 block text-sm font-medium">Pitch</label>
-                    <input id="pitch" name="pitch" type="range" min="0" max="255" className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
+                    <label htmlFor="pitch" className={`${inter.className} mb-4 text-l md:text-xl`}>Pitch: {pitch}</label>
+                    <input id="pitch" 
+                    name="pitch" 
+                    type="range" min="0" 
+                    max="255" 
+                    onChange={(e) => setPitch(parseInt(e.target.value))}
+                    className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-0 -bottom-6">Min (0)</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">Max (255)</span>
                 </div>
                 <div className="relative mb-4">
-                    <label htmlFor="speed" className="mb-2 block text-sm font-medium">Speed</label>
-                    <input id="speed" name="speed" type="range" min="0" max="255" className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
+                    <label className={`${inter.className} mb-4 text-l md:text-xl`}>Speed: {speed}</label>
+                    <input id="speed" 
+                    name="speed" 
+                    type="range" 
+                    min="0" max="255" 
+                    onChange={(e) => setSpeed(parseInt(e.target.value))}
+                    className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-0 -bottom-6">Min (0)</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">Max (255)</span>
                 </div>
                 <div className="relative mb-4">
-                    <label htmlFor="mouth" className="mb-2 block text-sm font-medium">Mouth</label>
-                    <input id="mouth" name="mouth" type="range" min="0" max="255" className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
+                    <label htmlFor="mouth" className={`${inter.className} mb-4 text-l md:text-xl`}>Mouth</label>
+                    <input id="mouth" 
+                    name="mouth" 
+                    type="range" 
+                    min="0" 
+                    max="255" 
+                    onChange={(e) => setMouth(parseInt(e.target.value))}
+                    className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-0 -bottom-6">Min (0)</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">Max (255)</span>
                 </div>
                 <div className="relative mb-4">
-                    <label htmlFor="throat" className="mb-2 block text-sm font-medium">Throat</label>
-                    <input id="throat" name="throat" type="range" min="0" max="255" className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
+                    <label htmlFor="throat" className={`${inter.className} mb-4 text-l md:text-xl`}>Throat</label>
+                    <input id="throat" 
+                    name="throat" 
+                    type="range" 
+                    min="0" 
+                    max="255" 
+                    onChange={(e) => setThroat(parseInt(e.target.value))}
+                    className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
                     <span className="text-sm text-white dark:text-gray-400 absolute start-0 -bottom-6">Min (0)</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute right-10 -bottom-6">Max (255)</span>
                 </div>
