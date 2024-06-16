@@ -12,7 +12,7 @@ export default function Page() {
         </div>
         <div>
           <p className={`${inter.className} mb-4 text-m md:text-l`}>
-            Custom voices: Any enabled event messages that begin with the name of your custom voice, followed by a colon (e.g. witch:) will be played in that voice's settings.
+            Custom voices: Any enabled event messages that begin with the name of your custom voice, followed by a colon (e.g. witch:) will be played in that voice&apos;s settings.
           </p>
           <p className={`${inter.className} mb-4 text-m md:text-l`}>
             Speed: Lower values make SAM speak faster, this is a quirk of the original engine.
