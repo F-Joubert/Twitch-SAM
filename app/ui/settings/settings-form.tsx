@@ -154,7 +154,7 @@ const SettingsPage: React.FC = () => {
                     </div>
                 ))}
             </div>
-            <h2>Enabled Channel Point Redeems</h2>
+            {/* <h2>Enabled Channel Point Redeems</h2>
             <div>
                 <input type="text"
                     placeholder="Redeem Name"
@@ -189,7 +189,7 @@ const SettingsPage: React.FC = () => {
                 <button
                     className="flex h-10 items-center rounded-lg bg-purple-800 px-4 text-sm font-medium text-white transition-colors hover:bg-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-fuchsia-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
                     onClick={saveCheerThreshold}>Save Cheer Threshold</button>
-            </div>
+            </div> */}
         </div>
     );
 };
