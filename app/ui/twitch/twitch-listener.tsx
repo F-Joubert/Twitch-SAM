@@ -37,7 +37,7 @@ const TwitchChatListener: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const twitchChannel = process.env.NEXT_PUBLIC_TWITCH_CHANNEL as string;
+    const twitchChannel = "denz1000";
 
     const client = new tmi.Client({
       connection: {
@@ -51,6 +51,7 @@ const TwitchChatListener: React.FC = () => {
 
     client.on("message", (channel: string, tags: tmi.ChatUserstate, message: string, self: boolean) => {
       if (self) return;
+      console.log(message);
     });
 
     // client.on("redeem", (channel: string, username: string, rewardType: string, tags: tmi.ChatUserstate) => {
@@ -62,15 +63,18 @@ const TwitchChatListener: React.FC = () => {
     client.on("cheer", (channel: string, tags: tmi.ChatUserstate, message: string) => {
       if (Number(tags.bits) >= cheerThreshold) {
         handleMessage(message);
+        console.log(message);
       }
     });
 
     client.on("subscription", (channel: string, username: string, methods: tmi.SubMethods, message: string, tags: tmi.SubUserstate) => {
       handleMessage(message);
+      console.log(message);
     });
 
     client.on("resub", (channel: string, username: string, months: number, message: string, tags: tmi.SubUserstate, methods: tmi.SubMethods) => {
       handleMessage(message);
+      console.log(message);
     });
 
     // client.on("subgift", (channel: string, username: string, streakMonths: number, recipient: string, methods: tmi.SubMethods, tags: tmi.SubGiftUserstate) => {
