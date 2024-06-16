@@ -47,3 +47,39 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
+input[type="range"] {
+  --tw-bg-opacity: 1;
+  background-image: linear-gradient(to right, black, purple);
+  height: 8px; /* Adjust this value for thickness */
+  border-radius: 4px; /* Adjust this value for rounded corners */
+  outline: none;
+  appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px; /* Adjust this value for thumb size */
+  height: 20px; /* Adjust this value for thumb size */
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px; /* Adjust this value for thumb size */
+  height: 20px; /* Adjust this value for thumb size */
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-ms-thumb {
+  width: 20px; /* Adjust this value for thumb size */
+  height: 20px; /* Adjust this value for thumb size */
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 50%;
+  cursor: pointer;
+}
