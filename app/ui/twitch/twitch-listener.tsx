@@ -53,18 +53,29 @@ const TwitchChatListener: React.FC = () => {
       if (self) return;
     });
 
-    client.on("redeem", (channel: string, username: string, rewardType: string, tags: tmi.ChatUserstate, message: string) => {
-      console.log(`Redeem: ${rewardType} - Enabled Redeems: ${enabledRedeems}`)
-      if (enabledRedeems[rewardType]) {
-        handleMessage(`${message}`);
-      }
-    });
+    // client.on("redeem", (channel: string, username: string, rewardType: string, tags: tmi.ChatUserstate) => {
+    //   if (enabledRedeems[rewardType]) {
+    //     handleMessage();
+    //   }
+    // });
 
     client.on("cheer", (channel: string, tags: tmi.ChatUserstate, message: string) => {
       if (Number(tags.bits) >= cheerThreshold) {
         handleMessage(message);
       }
     });
+
+    client.on("subscription", (channel: string, username: string, methods: tmi.SubMethods, message: string, tags: tmi.SubUserstate) => {
+      handleMessage(message);
+    });
+
+    client.on("resub", (channel: string, username: string, months: number, message: string, tags: tmi.SubUserstate, methods: tmi.SubMethods) => {
+      handleMessage(message);
+    });
+
+    // client.on("subgift", (channel: string, username: string, streakMonths: number, recipient: string, methods: tmi.SubMethods, tags: tmi.SubGiftUserstate) => {
+    //   handleMessage()
+    // });
 
     return () => {
       client.disconnect();
