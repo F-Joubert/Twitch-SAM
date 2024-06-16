@@ -16,6 +16,7 @@ export default function Form() {
                                 name="clientId"
                                 type="text"
                                 placeholder="Enter App's Client ID"
+                                required={true}
                                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
                             />
                         </div>
@@ -34,6 +35,7 @@ export default function Form() {
                                 name="clientSecret"
                                 type="password"
                                 placeholder="Enter App's Client Secret"
+                                required={true}
                                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
                             />
                         </div>
@@ -52,6 +54,7 @@ export default function Form() {
                                 name="callbackUrl"
                                 type="password"
                                 placeholder="http://localhost:3000"
+                                required={true}
                                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
                             />
                         </div>
@@ -70,6 +73,7 @@ export default function Form() {
                                 name="botUsername"
                                 type="password"
                                 placeholder="Enter Bot's Username"
+                                required={true}
                                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
                             />
                         </div>
