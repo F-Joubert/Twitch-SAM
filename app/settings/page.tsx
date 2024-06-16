@@ -1,11 +1,15 @@
-import { inter } from "@/app/ui/fonts";
+"use client";
+
+import { inter } from "../ui/fonts";
+import SettingsPage from "../ui/settings/settings-form";
 
 export default function Page() {
     return (
         <div>
             <h1 className={`${inter.className} mb-4 text-xl md:text-2xl`}>
-                App Settings
+                    App Settings
             </h1>
+            <SettingsPage />
         </div>
-    );
+    )
 }
