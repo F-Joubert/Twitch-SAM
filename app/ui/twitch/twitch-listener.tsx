@@ -61,10 +61,8 @@ const TwitchChatListener: React.FC = () => {
     // });
 
     client.on("cheer", (channel: string, tags: tmi.ChatUserstate, message: string) => {
-      if (Number(tags.bits) >= cheerThreshold) {
-        handleMessage(message);
-        console.log(message);
-      }
+      handleMessage(message);
+      console.log(message);
     });
 
     client.on("subscription", (channel: string, username: string, methods: tmi.SubMethods, message: string, tags: tmi.SubUserstate) => {
