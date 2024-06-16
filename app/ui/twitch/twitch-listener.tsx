@@ -7,18 +7,25 @@ import SamJs from "sam-js";
 const TwitchChatListener: React.FC = () => {
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(false);
-  const [savedSettings, setSavedSettings] = useState<{ [key: string]: any }>({});
+  const [savedVoices, setSavedVoices] = useState<{ [key: string]: any }>({});
+  const [enabledVoices, setEnabledVoices] = useState<{ [key: string]: boolean }>({});
   const [enabledRedeems, setEnabledRedeems] = useState<{ [key: string]: boolean }>({});
   const [cheerThreshold, setCheerThreshold] = useState<number>(100);
 
   useEffect(() => {
-    const saved = localStorage.getItem("voiceSettings");
+    let saved = localStorage.getItem("voiceSettings");
 
     if (saved) {
-      setSavedSettings(JSON.parse(saved));
+      setSavedVoices(JSON.parse(saved));
     }
 
-    const savedRedeems = localStorage.getItem("redeemSettings");
+    let savedEnabledVoices = localStorage.getItem("enabledVoices");
+
+    if (savedEnabledVoices) {
+      setEnabledVoices(JSON.parse(savedEnabledVoices));
+    }
+
+    let savedRedeems = localStorage.getItem("redeemSettings");
 
     if (savedRedeems) {
       const parsedRedeems = JSON.parse(savedRedeems);
@@ -29,7 +36,7 @@ const TwitchChatListener: React.FC = () => {
       setEnabledRedeems(enabledRedeems);
     }
 
-    const savedCheerThreshold = localStorage.getItem("cheerThreshold");
+    let savedCheerThreshold = localStorage.getItem("cheerThreshold");
 
     if (savedCheerThreshold) {
       setCheerThreshold(Number(savedCheerThreshold));
@@ -37,7 +44,7 @@ const TwitchChatListener: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const twitchChannel = "denz1000";
+    const twitchChannel = "nandroione";
 
     const client = new tmi.Client({
       connection: {
@@ -51,7 +58,7 @@ const TwitchChatListener: React.FC = () => {
 
     client.on("message", (channel: string, tags: tmi.ChatUserstate, message: string, self: boolean) => {
       if (self) return;
-      console.log(message);
+      handleMessage(message);
     });
 
     // client.on("redeem", (channel: string, username: string, rewardType: string, tags: tmi.ChatUserstate) => {
@@ -82,9 +89,20 @@ const TwitchChatListener: React.FC = () => {
     return () => {
       client.disconnect();
     };
-  }, [isAudioEnabled, audioContext, savedSettings, enabledRedeems, cheerThreshold]);
+  }, [isAudioEnabled, audioContext, savedVoices, enabledVoices, enabledRedeems, cheerThreshold]);
 
   const handleButtonClick = () => {
+    const updatedVoices = localStorage.getItem("voiceSettings");
+    const updatedEnabledVoices = localStorage.getItem("enabledVoices");
+
+    if (updatedVoices) {
+      setSavedVoices(JSON.parse(updatedVoices));
+    }
+
+    if (updatedEnabledVoices) {
+      setSavedVoices(JSON.parse(updatedEnabledVoices));
+    }
+
     if (!audioContext) {
       const context = new AudioContext();
       setAudioContext(context);
@@ -102,21 +120,20 @@ const TwitchChatListener: React.FC = () => {
 
   const handleMessage = (message: string) => {
     const sanitisedMessage = message.trim().replace(/^cheer\d+\s*/i, ""); // Regex to remove "cheer" followed by numbers and whitespace
-    console.log(`Sanitized message: ${sanitisedMessage}`);
-
+    
     const messageParts = sanitisedMessage.split(":");
     const settingName = messageParts[0];
     const messageContent = messageParts.slice(1).join(":");
 
-    if (isAudioEnabled && audioContext && savedSettings[settingName]) {
-      speakMessage(`${messageContent}`, savedSettings[settingName]);
+    if (isAudioEnabled && audioContext && enabledVoices[settingName] === true) {
+      console.log(`${enabledVoices}`)
+      speakMessage(`${messageContent}`, savedVoices[settingName]);
     } else if (isAudioEnabled && audioContext) {
-      speakMessage(`${sanitisedMessage}`);
+      speakMessage(`${messageContent}`);
     }
   }
 
   const speakMessage = (message: string, settings?: any) => {
-    console.log(settings);
 
     if (settings) {
       const sam = new SamJs({
