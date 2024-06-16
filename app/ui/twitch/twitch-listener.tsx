@@ -105,10 +105,13 @@ const TwitchChatListener: React.FC = () => {
     const settingName = messageParts[0];
     const messageContent = messageParts.slice(1).join(":");
 
+    const sanitisedMessage = message.replace(/^cheer\d+\s*/i, ""); // Regex to remove "cheer" followed by numbers and whitespace
+    console.log(`Sanitized message: ${sanitisedMessage}`);
+
     if (isAudioEnabled && audioContext && savedSettings[settingName]) {
       speakMessage(`${messageContent}`, savedSettings[settingName]);
     } else if (isAudioEnabled && audioContext) {
-      speakMessage(`${message}`);
+      speakMessage(`${sanitisedMessage}`);
     }
   }
 
