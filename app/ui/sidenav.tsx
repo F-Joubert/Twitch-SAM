@@ -2,6 +2,7 @@ import Link from 'next/link';
 import NavLinks from '@/app/ui/nav-links';
 import SAMLogo from "./sam-logo";
 import TwitchChatListener from "./twitch/twitch-listener";
+import Channel from "./twitch/channel";
 
 export default function SideNav() {
   return (
@@ -16,8 +17,9 @@ export default function SideNav() {
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
-        <div className="hidden h-auto w-full grow rounded-md bg-gray-900 md:block"></div>
-          <TwitchChatListener />
+        <div className="hidden h-auto w-full grow rounded-md bg-gray-900 md:block mt-0 mb-0"></div>
+        <Channel />
+        <TwitchChatListener />
       </div>
     </div>
   );
