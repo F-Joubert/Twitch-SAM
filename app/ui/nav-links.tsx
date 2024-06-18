@@ -17,7 +17,6 @@ import clsx from "clsx";
 const links = [
   { name: "Home", href: "/", icon: HomeIcon },
   { name: "Playground", href: "/playground", icon: SpeakerWaveIcon },
-  { name: "Settings", href: "/settings", icon: Cog8ToothIcon },
   { name: "Instructions", href: "/instructions", icon: InformationCircleIcon},
 ];
 
