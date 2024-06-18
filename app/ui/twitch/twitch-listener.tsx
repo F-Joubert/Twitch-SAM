@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fallbackVoice } from "@/app/lib/constants";
 import tmi from "tmi.js";
 import SamJs from "sam-js";
 
@@ -141,6 +142,13 @@ const TwitchChatListener: React.FC = () => {
   }
 
   const speakMessage = (message: string, settings?: any) => {
+    let defaultVoice
+
+    try {
+      defaultVoice = JSON.parse(localStorage.getItem("defaultVoice") || "{}");
+    } catch {
+      defaultVoice = fallbackVoice;
+    }
 
     if (settings) {
       const sam = new SamJs({
@@ -148,10 +156,16 @@ const TwitchChatListener: React.FC = () => {
         pitch: settings.pitch,
         mouth: settings.mouth,
         throat: settings.throat,
-      })
+      });
       sam.speak(message);
-    } else {
-      const sam = new SamJs();
+    }
+    else {
+      const sam = new SamJs({
+        speed: defaultVoice.speed,
+        pitch: defaultVoice.pitch,
+        mouth: defaultVoice.mouth,
+        throat: defaultVoice.throat,
+      });
       sam.speak(message);
     }
   };
