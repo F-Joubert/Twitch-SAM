@@ -6,12 +6,16 @@ import tmi from "tmi.js";
 import SamJs from "sam-js";
 
 const TwitchChatListener: React.FC = () => {
+  /* Initialise the component with no HTML Audio Element */
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(false);
+
+  /* These were an attempt to making saving and enabling new voices more responsive, on interaction I load from local storage into these but should just use redux */
   const [savedVoices, setSavedVoices] = useState<{ [key: string]: any }>({});
   const [enabledVoices, setEnabledVoices] = useState<{ [key: string]: boolean }>({});
-  const [enabledRedeems, setEnabledRedeems] = useState<{ [key: string]: boolean }>({});
-  const [cheerThreshold, setCheerThreshold] = useState<number>(100);
+  
+  // const [enabledRedeems, setEnabledRedeems] = useState<{ [key: string]: boolean }>({}); // Don't think we can use channel point redeems with the Twitch IRC API
+  const [cheerThreshold, setCheerThreshold] = useState<number>(1); 
 
   useEffect(() => {
     let saved = localStorage.getItem("voiceSettings");
@@ -20,22 +24,24 @@ const TwitchChatListener: React.FC = () => {
       setSavedVoices(JSON.parse(saved));
     }
 
+    /* Loading saved voices and whether they're enabled from local storage into state */
+
     let savedEnabledVoices = localStorage.getItem("enabledVoices");
 
     if (savedEnabledVoices) {
       setEnabledVoices(JSON.parse(savedEnabledVoices));
     }
 
-    let savedRedeems = localStorage.getItem("redeemSettings");
+    // let savedRedeems = localStorage.getItem("redeemSettings"); // Redeems currently don't work
 
-    if (savedRedeems) {
-      const parsedRedeems = JSON.parse(savedRedeems);
-      const enabledRedeems = parsedRedeems.reduce((store: { [key: string]: boolean }, redeem: string) => {
-        store[redeem] = true;
-        return store;
-      }, {});
-      setEnabledRedeems(enabledRedeems);
-    }
+    // if (savedRedeems) {
+    //   const parsedRedeems = JSON.parse(savedRedeems);
+    //   const enabledRedeems = parsedRedeems.reduce((store: { [key: string]: boolean }, redeem: string) => {
+    //     store[redeem] = true;
+    //     return store;
+    //   }, {});
+    //   setEnabledRedeems(enabledRedeems);
+    // }
 
     let savedCheerThreshold = localStorage.getItem("cheerThreshold");
 
@@ -58,7 +64,7 @@ const TwitchChatListener: React.FC = () => {
     client.connect();
 
     client.on("message", (channel: string, tags: tmi.ChatUserstate, message: string, self: boolean) => {
-      if (self) return;
+      // if (self) return; // This is so the bot doesn't trigger off it's own messages but it doesn't have chat perms so, useless.
       handleMessage(message);
     });
 
@@ -93,11 +99,11 @@ const TwitchChatListener: React.FC = () => {
   }, [isAudioEnabled, audioContext, savedVoices, enabledVoices, enabledRedeems, cheerThreshold]);
 
   const handleButtonClick = () => {
-    const updatedVoices = localStorage.getItem("voiceSettings");
-    const updatedEnabledVoices = localStorage.getItem("enabledVoices");
+    const updatedVoices = localStorage.getItem("voiceSettings"); 
+    const updatedEnabledVoices = localStorage.getItem("enabledVoices"); // Should move both these to redux
 
     if (updatedVoices) {
-      setSavedVoices(JSON.parse(updatedVoices));
+      setSavedVoices(JSON.parse(updatedVoices)); 
     }
 
     if (updatedEnabledVoices) {
@@ -105,14 +111,14 @@ const TwitchChatListener: React.FC = () => {
     }
 
     if (!audioContext) {
-      const context = new AudioContext();
+      const context = new AudioContext(); // Modern browsers don't like you creating an audio element without user interaction
       setAudioContext(context);
       setIsAudioEnabled(true);
     } else {
       if (audioContext.state === "suspended") {
         audioContext.resume();
         setIsAudioEnabled(true);
-      } else if (audioContext.state === "running") {
+      } else if (audioContext.state === "running") { // This disables the bot but doesn't stop the current message.
         audioContext.suspend();
         setIsAudioEnabled(false);
       }
@@ -125,18 +131,18 @@ const TwitchChatListener: React.FC = () => {
     let messageContent = "";
     let settingName = "";
 
-    if (sanitisedMessage.includes(":")) {
+    if (sanitisedMessage.includes(":")) {  // Remove everything before first colon and try match it to a saved voice.
       const messageParts = sanitisedMessage.split(":");
       settingName = messageParts[0];
-      messageContent = messageParts.slice(1).join(":");
+      messageContent = messageParts.slice(1).join(":"); // Currently can't handle more than one voice, so just put rest of users message back together if they attempted to do so
     } else {
       messageContent = sanitisedMessage;
     }
     
-    if (isAudioEnabled && audioContext && enabledVoices[settingName] === true) {
+    if (isAudioEnabled && audioContext && enabledVoices[settingName] === true) { // If user's message matches a voice, use those settings
       console.log(`${enabledVoices}`)
       speakMessage(`${messageContent}`, savedVoices[settingName]);
-    } else if (isAudioEnabled && audioContext) {
+    } else if (isAudioEnabled && audioContext) { 
       speakMessage(`${messageContent}`);
     }
   }
@@ -145,13 +151,13 @@ const TwitchChatListener: React.FC = () => {
     let defaultVoice
 
     try {
-      defaultVoice = JSON.parse(localStorage.getItem("defaultVoice") || "{}");
+      defaultVoice = JSON.parse(localStorage.getItem("defaultVoice") || "{}"); // Prefer to use user's saved default over the fallback
     } catch {
       defaultVoice = fallbackVoice;
     }
 
     if (settings) {
-      const sam = new SamJs({
+      const sam = new SamJs({ // Recognises a saved voice and contructs voice engine with it's settings.
         speed: settings.speed,
         pitch: settings.pitch,
         mouth: settings.mouth,
@@ -160,7 +166,7 @@ const TwitchChatListener: React.FC = () => {
       sam.speak(message);
     }
     else {
-      const sam = new SamJs({
+      const sam = new SamJs({   // No voice recognised, default / fallback settings.
         speed: defaultVoice.speed,
         pitch: defaultVoice.pitch,
         mouth: defaultVoice.mouth,
