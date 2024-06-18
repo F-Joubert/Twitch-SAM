@@ -17,6 +17,8 @@ export default function Form() {
             speakSAM(formData);
         } else if (submitAction === "saveVoice") {
             saveVoice(formData);
+        } else if (submitAction === "defaultVoice") {
+            newDefaultVoice(formData);
         }
     }
 
@@ -69,14 +71,17 @@ export default function Form() {
                     <span className="text-sm text-white dark:text-gray-400 absolute start-0 -bottom-6">Min (0)</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute right-10 -bottom-6">Max (255)</span>
                 </div>
+                <div className="col-span-2 grid gap-10 sm:grid-cols-3 lg:grid-cols-4">
                 <input
                     id="voiceName"
                     name="voiceName"
                     type="text"
                     placeholder="Optional: Name to save voice as."
-                    className="place-self-center peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black mb-4"
+                    className="col-span-2 place-self-center peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black mb-4"
                 />
                 <Button className="w-full justify-center" id="saveVoice" name="action" value="saveVoice" type="submit">Save Voice</Button>
+                <Button className="w-full justify-center" id="defaultVoice" name="action" value="defaultVoice" type="submit">Set Default Voice</Button>
+                </div>
             </div>
             <div className="flex justify-center mt-10">
                 <input
@@ -152,6 +157,22 @@ function saveVoice(formData: FormData) {
     }
 
     localStorage.setItem("savedVoices", JSON.stringify(storedVoices));
+}
+
+function newDefaultVoice(formData: FormData) {
+    const rawFormData = {
+        inputSpeed: Number(formData.get("speed")),
+        inputPitch: Number(formData.get("pitch")),
+        inputMouth: Number(formData.get("mouth")),
+        inputThroat: Number(formData.get("throat")),
+    };
+
+    localStorage.setItem("defaultVoice", JSON.stringify({
+        "speed": rawFormData.inputSpeed,
+        "pitch": rawFormData.inputPitch,
+        "mouth": rawFormData.inputMouth,
+        "throat": rawFormData.inputThroat
+    }));
 }
 
 // || [{"Default": {"speed": 72, "pitch": 64, "mouth": 128, "throat": 128}}]
