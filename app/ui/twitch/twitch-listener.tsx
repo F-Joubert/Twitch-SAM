@@ -5,6 +5,12 @@ import { fallbackVoice } from "@/app/lib/constants";
 import tmi from "tmi.js";
 import SamJs from "sam-js";
 
+/*
+    This is the main component that connects to Twitch IRC API through tmi-js (https://tmijs.com/).
+    This is a child component of sidenav (https://github.com/F-Joubert/twitch-sam/blob/main/app/ui/sidenav.tsx) which is a child component of
+    the main layout (https://github.com/F-Joubert/twitch-sam/edit/main/app/layout.tsx). Loading the component on all pages and maintaining connection.
+*/
+
 const TwitchChatListener: React.FC = () => {
   /* Initialise the component with no HTML Audio Element */
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
