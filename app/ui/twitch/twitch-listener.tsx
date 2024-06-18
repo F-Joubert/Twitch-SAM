@@ -102,7 +102,7 @@ const TwitchChatListener: React.FC = () => {
     return () => {
       client.disconnect();
     };
-  }, [isAudioEnabled, audioContext, savedVoices, enabledVoices, enabledRedeems, cheerThreshold]);
+  }, [isAudioEnabled, audioContext, savedVoices, enabledVoices, cheerThreshold]);
 
   const handleButtonClick = () => {
     const updatedVoices = localStorage.getItem("voiceSettings"); 
