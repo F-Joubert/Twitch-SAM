@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { Button } from "../button";
 
+/* Component to save a channel name to local storage.
+    Child component of SideNav    @/app/ui/sidenav */
+
 export default function Channel() {
     const [savedChannel, setSavedChannel] = useState<string | null>(null);
 
