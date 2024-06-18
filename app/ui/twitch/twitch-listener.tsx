@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import tmi from 'tmi.js';
+import { useEffect, useState } from "react";
+import tmi from "tmi.js";
 import SamJs from "sam-js";
 
 const TwitchChatListener: React.FC = () => {
@@ -44,7 +44,7 @@ const TwitchChatListener: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const twitchChannel = "nandroione";
+    const twitchChannel = String(localStorage.getItem("channelName"));
 
     const client = new tmi.Client({
       connection: {
@@ -121,10 +121,17 @@ const TwitchChatListener: React.FC = () => {
   const handleMessage = (message: string) => {
     const sanitisedMessage = message.trim().replace(/^cheer\d+\s*/i, ""); // Regex to remove "cheer" followed by numbers and whitespace
     
-    const messageParts = sanitisedMessage.split(":");
-    const settingName = messageParts[0];
-    const messageContent = messageParts.slice(1).join(":");
+    let messageContent = "";
+    let settingName = "";
 
+    if (sanitisedMessage.includes(":")) {
+      const messageParts = sanitisedMessage.split(":");
+      settingName = messageParts[0];
+      messageContent = messageParts.slice(1).join(":");
+    } else {
+      messageContent = sanitisedMessage;
+    }
+    
     if (isAudioEnabled && audioContext && enabledVoices[settingName] === true) {
       console.log(`${enabledVoices}`)
       speakMessage(`${messageContent}`, savedVoices[settingName]);
