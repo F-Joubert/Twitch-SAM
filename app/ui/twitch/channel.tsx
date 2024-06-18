@@ -1,17 +1,26 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "../button";
 
 export default function Channel() {
-    const savedChannel = localStorage.getItem("channelName");
+    const [savedChannel, setSavedChannel] = useState<string | null>(null);
 
-    const handleChannelSave = (formData: FormData) => {
-        const channelName = String(formData?.get("channel")) || "nandroione";
+    useEffect(() => {
+        const channelName = localStorage.getItem("channelName");
+        setSavedChannel(channelName);
+    }, []);
 
+    const handleChannelSave = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const channelName = String(formData.get("channel")) || "nandroione";
         localStorage.setItem("channelName", channelName);
-    }
+        setSavedChannel(channelName);
+    };
+
     return (
-            <form action={handleChannelSave}>
+            <form onSubmit={handleChannelSave}>
             <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3 bg-gray-900">
                 <input type="text" 
                 id="channel" 
