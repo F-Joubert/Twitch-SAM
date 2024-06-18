@@ -10,9 +10,30 @@ export default function Form() {
     const [pitch, setPitch] = useState<number>(64);
     const [mouth, setMouth] = useState<number>(128);
     const [throat, setThroat] = useState<number>(128);
+
+    const handleFormSubmit = (formData: FormData) => {
+        const submitAction = formData.get("action")
+        if (submitAction === "speak" || submitAction === "download") {
+            speakSAM(formData);
+        } else if (submitAction === "saveVoice") {
+            saveVoice(formData);
+        }
+    }
+
     return (
-        <form action={speakSAM}>
+        <form action={handleFormSubmit}>
             <div className="grid gap-10 mb-6 mt-6 sm:grid-cols-1 lg:grid-cols-2">
+            <div className="relative mb-4">
+                    <label className={`${inter.className} mb-4 text-l md:text-xl`}>Speed: {speed}</label>
+                    <input id="speed" 
+                    name="speed" 
+                    type="range" 
+                    min="0" max="255" 
+                    onChange={(e) => setSpeed(parseInt(e.target.value))}
+                    className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-0 -bottom-6">Min (0)</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">Max (255)</span>
+                </div>
                 <div className="relative mb-4">
                     <label htmlFor="pitch" className={`${inter.className} mb-4 text-l md:text-xl`}>Pitch: {pitch}</label>
                     <input id="pitch" 
@@ -25,18 +46,7 @@ export default function Form() {
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">Max (255)</span>
                 </div>
                 <div className="relative mb-4">
-                    <label className={`${inter.className} mb-4 text-l md:text-xl`}>Speed: {speed}</label>
-                    <input id="speed" 
-                    name="speed" 
-                    type="range" 
-                    min="0" max="255" 
-                    onChange={(e) => setSpeed(parseInt(e.target.value))}
-                    className="w-full h-2 bg-black rounded-lg cursor-pointer dark:bg-gray-700 accent-linear-gradient(to right, #515151, #E6BFFF)"/>
-                    <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-0 -bottom-6">Min (0)</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">Max (255)</span>
-                </div>
-                <div className="relative mb-4">
-                    <label htmlFor="mouth" className={`${inter.className} mb-4 text-l md:text-xl`}>Mouth</label>
+                    <label htmlFor="mouth" className={`${inter.className} mb-4 text-l md:text-xl`}>Mouth: {mouth}</label>
                     <input id="mouth" 
                     name="mouth" 
                     type="range" 
@@ -48,7 +58,7 @@ export default function Form() {
                     <span className="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">Max (255)</span>
                 </div>
                 <div className="relative mb-4">
-                    <label htmlFor="throat" className={`${inter.className} mb-4 text-l md:text-xl`}>Throat</label>
+                    <label htmlFor="throat" className={`${inter.className} mb-4 text-l md:text-xl`}>Throat: {throat}</label>
                     <input id="throat" 
                     name="throat" 
                     type="range" 
@@ -66,7 +76,7 @@ export default function Form() {
                     placeholder="Optional: Name to save voice as."
                     className="place-self-center peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black mb-4"
                 />
-                <Button className="w-full justify-center" type="submit">Save Voice</Button>
+                <Button className="w-full justify-center" id="saveVoice" name="action" value="saveVoice" type="submit">Save Voice</Button>
             </div>
             <div className="flex justify-center mt-10">
                 <input
@@ -109,3 +119,39 @@ function speakSAM(formData: FormData) {
         sam.download(`${rawFormData.inputText}`);
     }
 }
+
+function saveVoice(formData: FormData) {
+    const rawFormData = {
+        inputName: String(formData?.get("voiceName") ? formData?.get("voiceName") : "Default"),
+        inputSpeed: Number(formData.get("speed")),
+        inputPitch: Number(formData.get("pitch")),
+        inputMouth: Number(formData.get("mouth")),
+        inputThroat: Number(formData.get("throat")),
+    };
+
+    let storedVoices = JSON.parse(localStorage.getItem("savedVoices") || "[]");
+
+    const voiceIndex = storedVoices.findIndex((voice: any) => voice.hasOwnProperty(rawFormData.inputName));
+
+    if (voiceIndex !== -1) {
+        storedVoices[voiceIndex][rawFormData.inputName] = {
+            "speed": rawFormData.inputSpeed,
+            "pitch": rawFormData.inputPitch,
+            "mouth": rawFormData.inputMouth,
+            "throat": rawFormData.inputThroat
+        };
+    } else {
+        storedVoices.push({
+            [rawFormData.inputName]: {
+                "speed": rawFormData.inputSpeed,
+                "pitch": rawFormData.inputPitch,
+                "mouth": rawFormData.inputMouth,
+                "throat": rawFormData.inputThroat
+            }
+        });
+    }
+
+    localStorage.setItem("savedVoices", JSON.stringify(storedVoices));
+}
+
+// || [{"Default": {"speed": 72, "pitch": 64, "mouth": 128, "throat": 128}}]
