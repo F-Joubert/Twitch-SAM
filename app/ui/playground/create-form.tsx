@@ -136,7 +136,7 @@ function saveVoice(formData: FormData) {
 
     let storedVoices = JSON.parse(localStorage.getItem("savedVoices") || "[]");
 
-    const voiceIndex = storedVoices.findIndex((voice: any) => voice.hasOwnProperty(rawFormData.inputName));
+    const voiceIndex = storedVoices.findIndex((voice: any) => voice.hasOwnProperty(rawFormData.inputName)); // Checking if saved voice name exists since I have no duplicate handling.
 
     if (voiceIndex !== -1) {
         storedVoices[voiceIndex][rawFormData.inputName] = {
